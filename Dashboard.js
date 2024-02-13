@@ -1,14 +1,16 @@
 
 import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navigation';
 import Default from './components/Default';
+import Map from './Map'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import { NavigationContainer } from '@react-navigation/native';
 const Tab = createMaterialBottomTabNavigator();
 
 export default Dashboard = () => {
     return (
+      <NavigationContainer>
     <Tab.Navigator initialRouteName='Home'>
-      <Tab.Screen name="Home" children={() => <Default name = "Home" /> }  
+      <Tab.Screen name="Home" component={Default}
       options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
@@ -16,13 +18,14 @@ export default Dashboard = () => {
           ),
         }}
       />
-      <Tab.Screen name="Map" children={() => <Default name = "Map"/>} options={{
+      <Tab.Screen name="Map" component={Map} options={{
           tabBarLabel: 'Map',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="map" color={color} size={26} />
           ),
         }}/>
     </Tab.Navigator>
+    </NavigationContainer>
     
     )
 }

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default Default = (props) => {
     return (
         <View style={styles.container}>
-        <Text>This is {props.name}</Text>
+        <Text>Empty Dash</Text>
         <StatusBar style="auto" />
       </View>
     )
