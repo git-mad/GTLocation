@@ -11,11 +11,11 @@ export default function Map() {
     latitudeDelta: 0.029,
     longitudeDelta: 0.015,
   }
-  
+
   return (
-    
+
     <SafeAreaView style={styles.container}>
-      <MapView style={styles.map} 
+      <MapView style={styles.map}
       showsUserLocation = {true}
       followsUserLocation = {true}
       initialRegion={init_reg}
@@ -26,7 +26,7 @@ export default function Map() {
 
 
 
-  
+
 }
 
 const styles = StyleSheet.create({

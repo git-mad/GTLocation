@@ -21,12 +21,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ],
+      "googleServicesFile": "./android/google-services.json",
+      "package": "com.GITMAD.GTWrapped"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins" : [
+    "plugins": [
       [
         "expo-location",
         {

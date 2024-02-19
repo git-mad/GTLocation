@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542348903525",
+    "project_id": "gtwrapped-775e7",
+    "storage_bucket": "gtwrapped-775e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542348903525:android:b5cf5e4d0a4d37a2ac328c",
+        "android_client_info": {
+          "package_name": "com.GITMAD.GTWrapped"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSqKbTVZEwbdS5QqqdMMofmnnYIwHCkDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
