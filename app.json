@@ -28,7 +28,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.ACCESS_BACKGROUND_LOCATION"
       ],
-      "googleServicesFile": "./android/google-services.json",
+      "googleServicesFile": "./android/app/google-services.json",
       "package": "com.GITMAD.GTWrapped"
     },
     "web": {
@@ -42,6 +42,11 @@
           "isAndroidBackgroundLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "61ea8668-39d3-4dad-a6f4-ed07a4734114"
+      }
+    }
   }
 }

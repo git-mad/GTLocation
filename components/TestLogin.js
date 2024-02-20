@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 function TestLogin() {
@@ -21,7 +21,9 @@ function TestLogin() {
             <Text>Password</Text>
             <TextInput editable onChangeText={text => {setPassword(text);}} value={password}/>
             <Text>Welcome {email}</Text>
-            <Button title={"Login"} onClick={() => {
+            <Button title={"Login"} onPress={() => {
+                console.log("Test");
+                Alert.alert("YAY");
                 signUpTest();
             }}>
             </Button>
