@@ -19,11 +19,11 @@ function TestLogin() {
             Alert.alert(`User Created with ${email} and ${password}`);
         }).catch((err)=> {
             console.log(err);
-            if (error.code == 'auth/invalid-email') {
-                console.log("Your email is not formatted correctly (You need @gmail.com)")
+            if (err.code === 'auth/invalid-email') {
+                Alert.alert("Your email is not formatted correctly (You need @gmail.com)")
             }
-            if (error.code == 'auth/weak-password') {
-                console.log("Your password need to be at least 6 characters")
+            if (err.code === 'auth/weak-password') {
+                Alert.alert("Your password need to be at least 6 characters")
             }
         })
     }
@@ -33,8 +33,8 @@ function TestLogin() {
             Alert.alert(`Signed in!`)
         }).catch((err) => {
             console.log(err);
-            if (error.code == 'auth/invalid-credential') {
-                console.log("Your username or password is incorrect")
+            if (err.code == 'auth/invalid-credential') {
+                Alert.alert("Your username or password is incorrect")
             }
         })
     }
