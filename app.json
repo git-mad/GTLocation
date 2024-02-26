@@ -16,31 +16,41 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "UIBackgroundModes": [
-        "location",
-        "fetch",
-        "remote-notification"
-      ],
-      "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
-      "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
-      "NSLocationAlwaysUsageDescription":  "This app requires access to your location when open.",
-      "deploymentTarget": "14"
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch",
+          "remote-notification"
+        ],
+        "NSLocationWhenInUseUsageDescription": "This app requires access to your location when open.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app requires access to your location even when closed.",
+        "NSLocationAlwaysUsageDescription": "This app requires access to your location when open.",
+        "deploymentTarget": "14"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ],
+      "package": "com.anonymous.GTWrapped"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins" : [
+    "plugins": [
       [
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
-          "isAndroidBackgroundLocationEnabled": true
+          "isAndroidBackgroundLocationEnabled": true,
+          "isIosBackgroundLocationEnabled": true
         }
       ]
     ]
