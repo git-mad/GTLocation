@@ -37,8 +37,7 @@ export default function App() {
       console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long}`);
       if (user) {
         try {
-          const docRef = await addDoc(collection(db, "users"), {
-            email: user.email,
+          const docRef = await addDoc(collection(db, user.email), {
             latitude: lat,
             longitude: long,
             timeStamp: new Date(Date.now())
