@@ -18,7 +18,6 @@ const LOCATION_TRACKING = "location-tracking";
  * https://arnav25.medium.com/background-location-tracking-in-react-native-d03bb7652602
  */
 
-
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
