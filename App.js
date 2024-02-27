@@ -7,6 +7,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from './firebaseConfig';
 
 // medium article
 const LOCATION_TRACKING = "location-tracking";
@@ -15,24 +17,40 @@ const LOCATION_TRACKING = "location-tracking";
  * Taken from the following medium article:
  * https://arnav25.medium.com/background-location-tracking-in-react-native-d03bb7652602
  */
-TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
-  if (error) {
-    console.log("LOCATION_TRACKING task ERROR:", error);
-    return;
-  }
-  if (data) {
-    const { locations } = data;
-    let lat = locations[0].coords.latitude;
-    let long = locations[0].coords.longitude;
 
-    console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long}`);
-  }
-});
 
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  const [user, setUser] = useState();
+
+  TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
+    if (error) {
+      console.log("LOCATION_TRACKING task ERROR:", error);
+      return;
+    }
+    if (data) {
+      const { locations } = data;
+      let lat = locations[0].coords.latitude;
+      let long = locations[0].coords.longitude;
+
+      console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long}`);
+      if (user) {
+        try {
+          const docRef = await addDoc(collection(db, "users"), {
+            email: user.email,
+            latitude: lat,
+            longitude: long,
+            timeStamp: new Date(Date.now())
+          });
+          console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      }
+    }
+  });
   /**
    * Taken from the following medium article:
    * https://arnav25.medium.com/background-location-tracking-in-react-native-d03bb7652602
@@ -81,7 +99,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <PaperProvider>
-        <Dashboard />
+        <Dashboard setUser={setUser} user={user}/>
         <StatusBar style="auto" />
       </PaperProvider>
     </SafeAreaProvider>
