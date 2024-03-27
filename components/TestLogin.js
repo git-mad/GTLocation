@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, Alert, StyleSheet, SafeAreaView } from "react-native";
 import {
   onAuthStateChanged,
@@ -8,13 +8,15 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { TextInput, Card, Button } from "react-native-paper";
+import { GlobalContext } from "../GlobalContext";
 
 function TestLogin() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const context = useContext(GlobalContext)
+  const [user, setUser] = context.profile[0]
+  const [email, setEmail] = context.profile[1]
+  const [password, setPassword] = context.profile[2]
   onAuthStateChanged(auth, (user) => {
     if (initializing) setInitializing(false);
     if (user) {
