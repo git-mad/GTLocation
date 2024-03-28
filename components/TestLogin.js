@@ -1,30 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import {onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from '../firebaseConfig';
+import React, { useState, useEffect } from "react";
+import { View, Text, Alert, StyleSheet, SafeAreaView } from "react-native";
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { TextInput, Card, Button } from "react-native-paper";
 
 function TestLogin({route}) {
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [signedIn, setSignedIn] = useState(false);
-    const {setUser, user} = route.params;
+    const {user, setUser} = route.params;
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (i_user) => {
             if (initializing) setInitializing(false);
             if (i_user) {
                 console.log(`Hi ${i_user.uid}`);
+                user = i_user;
                 setUser(i_user);
-                setSignedIn(true);
             } else {
                 console.log("User is signed out");
                 setUser(null); // Set user to null when signed out
-                setSignedIn(false);
             }
         });
-
+        console.log("Test 2");
+        console.log(route.params);
         const currentUser = auth.currentUser;
         if (currentUser) {
             setUser(currentUser);
@@ -40,7 +45,8 @@ function TestLogin({route}) {
     createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
         setUser(userCredential.user);
         Alert.alert(`User Created with ${email} and ${password}`);
-    }).catch((err)=> {
+      })
+      .catch((err) => {
         console.log(err);
         if (err.code === 'auth/invalid-email') {
             Alert.alert("Your email is not formatted correctly (You need @gmail.com)");
@@ -51,60 +57,196 @@ function TestLogin({route}) {
         if (err.code === 'auth/email-already-in-use') {
             Alert.alert("That email already exists");
         }
-    })
-    }
+      });
+  };
 
     const signInButton = () => {
     signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
         setUser(userCredential.user);
         Alert.alert(`Signed in!`)
+        console.log(user);
     }).catch((err) => {
         console.log(err);
-        if (err.code == 'auth/invalid-credential') {
-            Alert.alert("Your username or password is incorrect")
+        if (err.code == "auth/invalid-credential") {
+          Alert.alert("Your username or password is incorrect");
         }
-    })
-    }
+      });
+  };
 
-    const signOutButton = () => {
-        signOut(auth).then(() => {
-            Alert.alert(`Signed out!`)
-        }).catch((err) => {
-            console.log(err);
-        })
-    }
+  const signOutButton = () => {
+    signOut(auth)
+      .then(() => {
+        Alert.alert(`Signed out!`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    if (initializing) return null;
+  if (initializing) return null;
 
-    return (
-        <>
-            <Text>Email</Text>
-            <TextInput editable={!signedIn} onChangeText={text => {setEmail(text);}} value={email}/>
-            <Text>Password</Text>
-            <TextInput editable={!signedIn} onChangeText={text => {setPassword(text);}} value={password}/>
-            <Text>Welcome {email}</Text>
-            <Button title={"Sign Up"} onPress={() => {
+  return (
+    <>
+      <SafeAreaView style={styles.content}>
+        <View style={styles.view}>
+          <Card style={styles.cardView}>
+            <Card.Title
+              title={`Welcome ${user != null ? user : "NULL"} to GTWrapped`}
+              titleStyle={styles.cardTitle}
+            ></Card.Title>
+            {/* <Text>Email</Text> */}
+            <TextInput
+              label="GT Email"
+              mode="outlined"
+              keyboardType="email-address"
+              editable
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              value={email}
+            ></TextInput>
+            {/* <TextInput
+              editable
+              onChangeText={(text) => {
+                setEmail(text);
+              }}
+              value={email}
+            /> */}
+            {/* <Text>Password</Text> */}
+            <TextInput
+              mode="outlined"
+              label="Password"
+              margin="10"
+              secureTextEntry={true}
+              editable
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              value={password}
+            ></TextInput>
+            {/* <TextInput
+              editable
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+              value={password}
+            />
+            <Text>Welcome {email}</Text> */}
+            <Button
+              mode="contained"
+              textColor="black"
+              style={styles.cardButton}
+              title={"Sign Up"}
+              onPress={() => {
                 console.log("pressed sign up");
                 signUpButton();
-            }} disabled={email == '' || password == ''}>
+              }}
+              disabled={email == "" || password == ""}
+            >
+              Sign Up
             </Button>
-            <Button title="Sign in" onPress={() => {
+            {/* <Button
+              title={"Sign Up"}
+              onPress={() => {
+                console.log("pressed sign up");
+                signUpButton();
+              }}
+              disabled={email == "" || password == ""}
+            ></Button> */}
+            <Button
+              mode="contained"
+              textColor="black"
+              style={styles.cardButton}
+              title="Sign in"
+              onPress={() => {
                 console.log("Pressed sign in");
                 console.log(`User: ${user}`);
                 signInButton();
-            }} disabled={email == '' || password == ''}></Button>
-            <Button title="Sign out" onPress={() => {
+              }}
+              disabled={email == "" || password == ""}
+            >
+              Login
+            </Button>
+            {/* <Button
+              title="Sign in"
+              onPress={() => {
+                console.log("Pressed sign in");
+                console.log(`User: ${user}`);
+                signInButton();
+              }}
+              disabled={email == "" || password == ""}
+            ></Button> */}
+            <Button
+              mode="contained"
+              textColor="black"
+              style={styles.cardButton}
+              title="Sign out"
+              onPress={() => {
                 console.log("Pressed sign out");
                 signOutButton();
-            }} disabled={!signedIn}></Button>
-            <Text>Test</Text>
+              }}
+              disabled={user == null}
+            >
+              Sign Out
+            </Button>
+            {/* <Button
+              title="Sign out"
+              onPress={() => {
+                console.log("Pressed sign out");
+                signOutButton();
+              }}
+              disabled={!user}
+            ></Button> */}
+            <Text fontColor="white">Test</Text>
             {user ? <Text>{`Hi ${user.email}`}</Text> : <Text>Sad</Text>}
-            <Button title={"Display stats"} onPress={() => {
+            <Button
+              mode="contained"
+              textColor="black"
+              style={styles.cardButton}
+              title={"Display stats"}
+              onPress={() => {
                 console.log(user);
-            }}></Button>
-        </>
+              }}
+            >
+              Display Stats
+            </Button>
+            {/* <Button
+              title={"Display stats"}
+              onPress={() => {
+                console.log(user);
+              }}
+            ></Button> */}
+          </Card>
+        </View>
+      </SafeAreaView>
+    </>
+  );
+}
 
-    );
-  }
+const styles = StyleSheet.create({
+  content: {
+    display: "flex",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    backgroundColor: "rgb(34,38,37)",
+  },
+  view: {
+    width: "80%",
+  },
+  cardTitle: {
+    color: "white",
+  },
+  cardButton: {
+    margin: 10,
+    marginLeft: 0,
+    marginRight: 0,
+    backgroundColor: "rgb(193,255,213)",
+  },
+  cardView: {
+    backgroundColor: "black",
+  },
+});
 
-  export default TestLogin;
+export default TestLogin;
