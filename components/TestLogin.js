@@ -31,7 +31,7 @@ function TestLogin({route}) {
             }
         });
         console.log("Test 2");
-        console.log(route.params);
+        //console.log(route.params);
         const currentUser = auth.currentUser;
         if (currentUser) {
             setUser(currentUser);
@@ -66,7 +66,7 @@ function TestLogin({route}) {
     signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
         setUser(userCredential.user);
         Alert.alert(`Signed in!`)
-        console.log(user);
+        //console.log(user);
     }).catch((err) => {
         console.log(err);
         if (err.code == "auth/invalid-credential") {
@@ -102,6 +102,7 @@ function TestLogin({route}) {
               mode="outlined"
               keyboardType="email-address"
               editable
+              disabled={user != null}
               onChangeText={(text) => {
                 setEmail(text);
               }}
@@ -121,6 +122,7 @@ function TestLogin({route}) {
               margin="10"
               secureTextEntry={true}
               editable
+              disabled={user != null}
               onChangeText={(text) => {
                 setPassword(text);
               }}
@@ -143,7 +145,7 @@ function TestLogin({route}) {
                 console.log("pressed sign up");
                 signUpButton();
               }}
-              disabled={email == "" || password == "" || user}
+              disabled={email == "" || password == "" || user != null}
             >
               Sign Up
             </Button>
@@ -165,19 +167,10 @@ function TestLogin({route}) {
                 console.log(`User: ${user}`);
                 signInButton();
               }}
-              disabled={email == "" || password == "" || user}
+              disabled={email == "" || password == "" || user != null}
             >
               Login
             </Button>
-            {/* <Button
-              title="Sign in"
-              onPress={() => {
-                console.log("Pressed sign in");
-                console.log(`User: ${user}`);
-                signInButton();
-              }}
-              disabled={email == "" || password == ""}
-            ></Button> */}
             <Button
               mode="contained"
               textColor="black"
@@ -191,14 +184,6 @@ function TestLogin({route}) {
             >
               Sign Out
             </Button>
-            {/* <Button
-              title="Sign out"
-              onPress={() => {
-                console.log("Pressed sign out");
-                signOutButton();
-              }}
-              disabled={!user}
-            ></Button> */}
             <Text fontColor="white">Test</Text>
             {user ? <Text>{`Hi ${user.email}`}</Text> : <Text>Sad</Text>}
             <Button
@@ -207,17 +192,11 @@ function TestLogin({route}) {
               style={styles.cardButton}
               title={"Display stats"}
               onPress={() => {
-                console.log(user);
+                //console.log(user);
               }}
             >
               Display Stats
             </Button>
-            {/* <Button
-              title={"Display stats"}
-              onPress={() => {
-                console.log(user);
-              }}
-            ></Button> */}
           </Card>
         </View>
       </SafeAreaView>

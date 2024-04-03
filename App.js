@@ -40,7 +40,7 @@ export default function App() {
       let lat = locations[0].coords.latitude;
       let long = locations[0].coords.longitude;
 
-      console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long}`);
+      //console.log(`${new Date(Date.now()).toLocaleString()}: ${lat},${long}`);
       if (user) {
         try {
           const docRef = await addDoc(collection(db, user.email), {
