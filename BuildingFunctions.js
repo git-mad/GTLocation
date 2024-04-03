@@ -1,3 +1,28 @@
+
+class Building {
+    name;
+    topLeft;
+    topRight;
+    bottomLeft;
+    bottomRight;
+
+    constructor(name, topLeft, topRight, bottomLeft, bottomRight) {
+        this.name = name;
+        this.topLeft = topLeft;
+        this.topRight = topRight;
+        this.bottomLeft = bottomLeft;
+        this.bottomRight = bottomRight;
+    }
+}
+
+const buildingList = [
+    new Building("East Architecture",
+                 [33.776217787259306, -84.39542688430666],
+                 [33.77621278221531, -84.39496474519075],
+                 [33.77607138960092, -84.39542086294956],
+                 [33.77607889717923, -84.39497678790335])
+]
+
 export const isInEastArchitecture = (lat, lng) => {
     const topLeft = [33.776217787259306, -84.39542688430666]
     const topRight = [33.77621278221531, -84.39496474519075]
