@@ -7,12 +7,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { NavigationContainer } from '@react-navigation/native';
 const Tab = createMaterialBottomTabNavigator();
 
-export default Dashboard = ({setUser, user}) => {
+export default Dashboard = () => {
     return (
       <NavigationContainer>
     <Tab.Navigator initialRouteName='Home'>
       <Tab.Screen name="Login" component={TestLogin}
-      initialParams={{setUser, user}}
         options={{
             tabBarLabel: 'Login',
             tabBarIcon: ({ color }) => (
@@ -21,7 +20,7 @@ export default Dashboard = ({setUser, user}) => {
           }}
       />
       <Tab.Screen name="Home" component={Default}
-      options={{
+        options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />

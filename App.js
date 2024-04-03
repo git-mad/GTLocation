@@ -7,6 +7,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
+import { GlobalContext } from './GlobalContext';
+
 import { collection, addDoc } from "firebase/firestore";
 import { db } from './firebaseConfig';
 
@@ -21,8 +23,10 @@ const LOCATION_TRACKING = "location-tracking";
 export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-
   const [user, setUser] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  let globalObj = {profile: [[user, setUser], [email, setEmail], [password, setPassword]]}
 
   TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
     if (error) {
@@ -95,12 +99,15 @@ export default function App() {
   console.log(text);
 
   return (
-    <SafeAreaProvider>
-      <PaperProvider>
-        <Dashboard setUser={setUser} user={user}/>
-        <StatusBar style="auto" />
-      </PaperProvider>
-    </SafeAreaProvider>
+    <GlobalContext.Provider value={globalObj}>
+      <SafeAreaProvider>
+        <PaperProvider>
+            <Dashboard/>
+          <StatusBar style="auto" />
+        </PaperProvider>
+      </SafeAreaProvider>
+    </GlobalContext.Provider>
+
   );
 }
 
