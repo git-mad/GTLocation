@@ -9,9 +9,9 @@ import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
 import { GlobalContext } from './GlobalContext';
 
-import { isInEastArchitecture } from "./BuildingFunctions";
+import { isInEastArchitecture, isInInstructionalCenter } from "./BuildingFunctions";
 
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from './firebaseConfig';
 
 // medium article
@@ -50,17 +50,33 @@ export default function App() {
           });
           console.log("Document written with ID: ", docRef.id);
 
+          const userDocRef = doc(db, "BUILDINGS", user.email);
+          const userDocSnapshot = await getDoc(userDocRef)
+          const userBuildingData = userDocSnapshot.data();
+
           if (isInEastArchitecture(lat, long)) {
-            const userDocRef = doc(db, "BUILDINGS", user.email);
+            const previousTime = userBuildingData.timeSpentInEastArchitecture || 0;
 
             const newDoc = {
+              ...userBuildingData,
               email: user.email,
-              timeStamp: new Date(Date.now())
+              timeSpentInEastArchitecture: previousTime + 5
             }
 
             const docRef2 = await setDoc(userDocRef, newDoc);
-            // TODO: THis is where the error is, it doesn't have any impact right now
-            console.log("Updated location for ID: ", docRef2.id);
+            console.log("Updated location for East Architecture: ", previousTime + 5);
+          }
+          if (isInInstructionalCenter(lat, long)) {
+            const previousTime = userBuildingData.timeSpentInInstructionalCenter || 0;
+
+            const newDoc = {
+              ...userBuildingData,
+              email: user.email,
+              timeSpentInInstructionalCenter: previousTime + 5
+            }
+
+            const docRef2 = await setDoc(userDocRef, newDoc);
+            console.log("Updated location for Instructional Center: ", previousTime);
           }
 
         } catch (e) {
