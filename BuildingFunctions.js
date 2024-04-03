@@ -24,12 +24,12 @@ const buildingList = [
 ]
 
 export const isInEastArchitecture = (lat, lng) => {
-    const topLeft = [33.776217787259306, -84.39542688430666]
-    const topRight = [33.77621278221531, -84.39496474519075]
-    const bottomLeft = [33.77607138960092, -84.39542086294956]
-    const bottomRight = [33.77607889717923, -84.39497678790335]
+    const topLeft = [33.77630556911948, -84.39575491672663]
+    const bottomLeft = [33.77565645321612, -84.39568608972736]
+    const bottomRight = [33.77568505842732, -84.39492369835084]
+    const topRight = [33.776261561417044, -84.39491575677398]
 
-    return true; //DEBUGGING
+    //return true; //DEBUGGING
     // lat = y-axis = [0]
     // lng = x-axis = [1]
 

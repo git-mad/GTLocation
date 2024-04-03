@@ -143,7 +143,7 @@ function TestLogin({route}) {
                 console.log("pressed sign up");
                 signUpButton();
               }}
-              disabled={email == "" || password == ""}
+              disabled={email == "" || password == "" || user}
             >
               Sign Up
             </Button>
@@ -165,7 +165,7 @@ function TestLogin({route}) {
                 console.log(`User: ${user}`);
                 signInButton();
               }}
-              disabled={email == "" || password == ""}
+              disabled={email == "" || password == "" || user}
             >
               Login
             </Button>
