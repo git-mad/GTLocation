@@ -9,7 +9,9 @@ import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
 import { GlobalContext } from './GlobalContext';
 
-import { collection, addDoc } from "firebase/firestore";
+import { isInEastArchitecture } from "./BuildingFunctions";
+
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { db } from './firebaseConfig';
 
 // medium article
@@ -47,6 +49,20 @@ export default function App() {
             timeStamp: new Date(Date.now())
           });
           console.log("Document written with ID: ", docRef.id);
+
+          if (isInEastArchitecture(lat, long)) {
+            const userDocRef = doc(db, "BUILDINGS", user.email);
+
+            const newDoc = {
+              email: user.email,
+              timeStamp: new Date(Date.now())
+            }
+
+            const docRef2 = await setDoc(userDocRef, newDoc);
+            // TODO: THis is where the error is, it doesn't have any impact right now
+            console.log("Updated location for ID: ", docRef2.id);
+          }
+
         } catch (e) {
           console.error("Error adding document: ", e);
         }
