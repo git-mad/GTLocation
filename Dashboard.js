@@ -20,7 +20,7 @@ export default Dashboard = () => {
           }}
       />
       <Tab.Screen name="Home" component={Default}
-      options={{
+        options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="home" color={color} size={26} />
