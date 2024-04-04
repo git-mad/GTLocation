@@ -10,47 +10,64 @@ import { auth } from "../firebaseConfig";
 import { TextInput, Card, Button } from "react-native-paper";
 import { GlobalContext } from "../GlobalContext";
 
-function TestLogin() {
-  // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const context = useContext(GlobalContext)
-  const [user, setUser] = context.profile[0]
-  const [email, setEmail] = context.profile[1]
-  const [password, setPassword] = context.profile[2]
-  onAuthStateChanged(auth, (user) => {
-    if (initializing) setInitializing(false);
-    if (user) {
-      console.log(`Hi ${user.uid}`);
-      setUser(user);
-    } else {
-      console.log("User is signed out");
-      setUser(user);
-    }
-  });
-  const signUpButton = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
+function TestLogin({route}) {
+    // Set an initializing state whilst Firebase connects
+    const [initializing, setInitializing] = useState(true);
+    const context = useContext(GlobalContext)
+    const [user, setUser] = context.profile[0]
+    const [email, setEmail] = context.profile[1]
+    const [password, setPassword] = context.profile[2]
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (i_user) => {
+            if (initializing) setInitializing(false);
+            if (i_user) {
+                console.log(`Hi ${i_user.uid}`);
+                user = i_user;
+                setUser(i_user);
+            } else {
+                console.log("User is signed out");
+                setUser(null); // Set user to null when signed out
+            }
+        });
+        console.log("Test 2");
+        //console.log(route.params);
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            setUser(currentUser);
+        } else {
+            setInitializing(false);
+        }
+
+        // Cleanup function to unsubscribe from the listener
+        return () => unsubscribe();
+    }, []); // Empty dependency array ensures the effect runs only once
+
+    const signUpButton = () => {
+    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        setUser(userCredential.user);
         Alert.alert(`User Created with ${email} and ${password}`);
       })
       .catch((err) => {
         console.log(err);
-        if (err.code === "auth/invalid-email") {
-          Alert.alert(
-            "Your email is not formatted correctly (You need @gmail.com)"
-          );
+        if (err.code === 'auth/invalid-email') {
+            Alert.alert("Your email is not formatted correctly (You need @gmail.com)");
         }
-        if (err.code === "auth/weak-password") {
-          Alert.alert("Your password need to be at least 6 characters");
+        if (err.code === 'auth/weak-password') {
+            Alert.alert("Your password need to be at least 6 characters");
+        }
+        if (err.code === 'auth/email-already-in-use') {
+            Alert.alert("That email already exists");
         }
       });
   };
 
-  const signInButton = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        Alert.alert(`Signed in!`);
-      })
-      .catch((err) => {
+    const signInButton = () => {
+    signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+        setUser(userCredential.user);
+        Alert.alert(`Signed in!`)
+        //console.log(user);
+    }).catch((err) => {
         console.log(err);
         if (err.code == "auth/invalid-credential") {
           Alert.alert("Your username or password is incorrect");
@@ -76,7 +93,7 @@ function TestLogin() {
         <View style={styles.view}>
           <Card style={styles.cardView}>
             <Card.Title
-              title="Welcome to GTWrapped"
+              title={`Welcome ${user != null ? user.email : "NULL"} to GTWrapped`}
               titleStyle={styles.cardTitle}
             ></Card.Title>
             {/* <Text>Email</Text> */}
@@ -85,6 +102,7 @@ function TestLogin() {
               mode="outlined"
               keyboardType="email-address"
               editable
+              disabled={user != null}
               onChangeText={(text) => {
                 setEmail(text);
               }}
@@ -104,6 +122,7 @@ function TestLogin() {
               margin="10"
               secureTextEntry={true}
               editable
+              disabled={user != null}
               onChangeText={(text) => {
                 setPassword(text);
               }}
@@ -126,7 +145,7 @@ function TestLogin() {
                 console.log("pressed sign up");
                 signUpButton();
               }}
-              disabled={email == "" || password == ""}
+              disabled={email == "" || password == "" || user != null}
             >
               Sign Up
             </Button>
@@ -148,19 +167,10 @@ function TestLogin() {
                 console.log(`User: ${user}`);
                 signInButton();
               }}
-              disabled={email == "" || password == ""}
+              disabled={email == "" || password == "" || user != null}
             >
               Login
             </Button>
-            {/* <Button
-              title="Sign in"
-              onPress={() => {
-                console.log("Pressed sign in");
-                console.log(`User: ${user}`);
-                signInButton();
-              }}
-              disabled={email == "" || password == ""}
-            ></Button> */}
             <Button
               mode="contained"
               textColor="black"
@@ -170,18 +180,10 @@ function TestLogin() {
                 console.log("Pressed sign out");
                 signOutButton();
               }}
-              disabled={!user}
+              disabled={user == null}
             >
               Sign Out
             </Button>
-            {/* <Button
-              title="Sign out"
-              onPress={() => {
-                console.log("Pressed sign out");
-                signOutButton();
-              }}
-              disabled={!user}
-            ></Button> */}
             <Text fontColor="white">Test</Text>
             {user ? <Text>{`Hi ${user.email}`}</Text> : <Text>Sad</Text>}
             <Button
@@ -190,17 +192,11 @@ function TestLogin() {
               style={styles.cardButton}
               title={"Display stats"}
               onPress={() => {
-                console.log(user);
+                //console.log(user);
               }}
             >
               Display Stats
             </Button>
-            {/* <Button
-              title={"Display stats"}
-              onPress={() => {
-                console.log(user);
-              }}
-            ></Button> */}
           </Card>
         </View>
       </SafeAreaView>
