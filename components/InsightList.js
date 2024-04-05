@@ -4,17 +4,19 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { GlobalContext } from "../GlobalContext";
 
-// Seperates insights into first, second, and third lists
 export default InsightList = () => {
   const context = useContext(GlobalContext);
   const [insights, setInsights] = context.profile[3];
+  const [augmentedInsights, setAugmentedInsights] = useState(
+    insights.slice(0, insights.length > 9 ? 9 : insights.length)
+  );
 
   //Renders Card elements
   return (
     <View styles={styles.containerStyle}>
-      {insights.map((element, index) => (
+      {augmentedInsights.map((element, index) => (
         <View
-          style={styles.leftCardViewInsights}
+          style={styles.cardViewInsights}
           justifyContent={index % 2 == 0 ? "start" : "flex-end"}
           key={index}
         >
@@ -38,11 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(193,255,213)",
     padding: 5,
   },
-  leftCardViewInsights: {
-    flexDirection: "row",
-    padding: 15,
-  },
-  rightCardViewInsights: {
+  cardViewInsights: {
     flexDirection: "row",
     padding: 15,
   },
