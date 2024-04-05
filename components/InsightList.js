@@ -4,45 +4,60 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { GlobalContext } from "../GlobalContext";
 
-// Seperates insights into left and right lists
+// Seperates insights into first, second, and third lists
 const SeperateInsights = () => {
   const context = useContext(GlobalContext);
   const [insights, setInsights] = context.profile[3];
 
-  const [leftInsights, setLeftInsights] = useState([]);
-  const [rightInsights, setRightInsights] = useState([]);
+  const [firstInsights, setFirstInsights] = useState([]);
+  const [secondInsights, setSecondInsights] = useState([]);
+  const [thirdInsights, setThirdInsights] = useState([]);
 
   useEffect(() => {
     // Checks and restricts iteration to not overflow on screen
     let maxIndex = insights.leftCardViewInsights > 6 ? insights.length : 6;
     console.log(maxIndex);
 
-    // Resets left and right insight lists for expo re-rendering
-    setLeftInsights([]);
-    setRightInsights([]);
+    // Resets first, second, and third insight lists for expo re-rendering
+    setFirstInsights([]);
+    setSecondInsights([]);
+    setThirdInsights([]);
 
     for (let i = 0; i < maxIndex; i++) {
-      if (i % 2 == 0) {
-        if (insights[i] != null)
-          setLeftInsights((prevState) => [...prevState, insights[i]]);
-      } else {
-        if (insights[i] != null)
-          setRightInsights((prevState) => [...prevState, insights[i]]);
+      switch (i) {
+        case 0:
+          setFirstInsights((prevState) => [...prevState, insights[i]]);
+          break;
+        case 1:
+          setFirstInsights((prevState) => [...prevState, insights[i]]);
+          break;
+        case 2:
+          setSecondInsights((prevState) => [...prevState, insights[i]]);
+          break;
+        case 3:
+          setSecondInsights((prevState) => [...prevState, insights[i]]);
+          break;
+        case 4:
+          setThirdInsights((prevState) => [...prevState, insights[i]]);
+          break;
+        case 5:
+          setThirdInsights((prevState) => [...prevState, insights[i]]);
+          break;
       }
     }
   }, [insights]);
 
-  return { leftInsights, rightInsights };
+  return { firstInsights, secondInsights, thirdInsights };
 };
 
 // Creates Card elements for insights
 export default InsightList = () => {
-  const { leftInsights, rightInsights } = SeperateInsights();
+  const { firstInsights, secondInsights, thirdInsights } = SeperateInsights();
 
   //Renders Card elements for both left and right sides
   return (
     <View styles={styles.containerStyle}>
-      {leftInsights.map((element, key) => (
+      {firstInsights.map((element, key) => (
         <View style={styles.leftCardViewInsights} key={key}>
           <Card style={styles.cardInsights}>
             <Text style={styles.textInsights} key={element}>
@@ -51,8 +66,17 @@ export default InsightList = () => {
           </Card>
         </View>
       ))}
-      {rightInsights.map((element, key) => (
+      {secondInsights.map((element, key) => (
         <View style={styles.rightCardViewInsights} key={key}>
+          <Card style={styles.cardInsights}>
+            <Text style={styles.textInsights} key={element}>
+              {element}
+            </Text>
+          </Card>
+        </View>
+      ))}
+      {thirdInsights.map((element, key) => (
+        <View style={styles.leftCardViewInsights} key={key}>
           <Card style={styles.cardInsights}>
             <Text style={styles.textInsights} key={element}>
               {element}
