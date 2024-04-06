@@ -1,14 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import InsightList from "./InsightList";
+import InsightListCardView from "./InsightListCardView";
 import { Card } from "react-native-paper";
+import { GestureHandler } from "expo";
+
 export default Default = (props) => {
   return (
     <View style={styles.container}>
-      <Card style={styles.cardMain}>
-        <Card.Title title="Insights" titleStyle={styles.cardTitle}></Card.Title>
-        <InsightList></InsightList>
-      </Card>
+      <InsightListCardView></InsightListCardView>
       <StatusBar style="auto" />
     </View>
   );
@@ -16,20 +15,9 @@ export default Default = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "rgb(34,38,37)",
     alignItems: "center",
     justifyContent: "center",
-  },
-  cardMain: {
-    backgroundColor: "black",
-    height: "80%",
-    width: "90%",
-  },
-  cardTitle: {
-    color: "white",
-    textAlign: "center",
-    fontSize: 20,
-    marginTop: 10,
+    flex: 1,
   },
 });
