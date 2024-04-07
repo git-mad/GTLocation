@@ -8,12 +8,15 @@ import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
 import { GlobalContext } from "./GlobalContext";
-
+import Default from "./components/Default";
+import Map from "./Map";
+import TestLogin from "./components/TestLogin";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   isInEastArchitecture,
   isInInstructionalCenter,
 } from "./BuildingFunctions";
-
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
@@ -59,6 +62,7 @@ export default function App() {
       [insights, setInsights],
     ],
   };
+  const Stack = createNativeStackNavigator();
 
   TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
     if (error) {
@@ -171,8 +175,14 @@ export default function App() {
     <GlobalContext.Provider value={globalObj}>
       <SafeAreaProvider>
         <PaperProvider>
-          <Dashboard />
-          <StatusBar style="auto" />
+          <NavigationContainer independent={true}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Dashboard" component={Dashboard} />
+              <Stack.Screen name="Home" component={Default} />
+              <Stack.Screen name="Login" component={TestLogin} />
+              <Stack.Screen name="Map" component={Map} />
+            </Stack.Navigator>
+          </NavigationContainer>
         </PaperProvider>
       </SafeAreaProvider>
     </GlobalContext.Provider>
