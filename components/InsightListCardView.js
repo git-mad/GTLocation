@@ -12,20 +12,18 @@ export default InsightListCardView = () => {
   return (
     <Card style={styles.cardMain}>
       <Card.Title title="Insights" titleStyle={styles.cardTitle}></Card.Title>
-      <ScrollView styles={styles.scrollViewStyle}>
+      <ScrollView styles>
         {insights.map((element, index) => (
-          <View styles={styles.insightsContainer}>
-            <View
-              style={styles.cardViewInsights}
-              justifyContent={index % 2 == 0 ? "start" : "flex-end"}
-              key={index}
-            >
-              <Card style={styles.cardInsights}>
-                <Text style={styles.textInsights} key={element}>
-                  {element}
-                </Text>
-              </Card>
-            </View>
+          <View
+            style={styles.cardViewInsights}
+            justifyContent={index % 2 == 0 ? "start" : "flex-end"}
+            key={index}
+          >
+            <Card style={styles.cardInsights}>
+              <Text style={styles.textInsights} key={element}>
+                {element}
+              </Text>
+            </Card>
           </View>
         ))}
       </ScrollView>
@@ -45,11 +43,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 10,
   },
-  insightsContainer: {},
   textInsights: {
     color: "black",
   },
-  scrollViewStyle: {},
   cardInsights: {
     backgroundColor: "rgb(193,255,213)",
     padding: 5,
