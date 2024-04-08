@@ -20,12 +20,6 @@ function TestLogin({ route, navigation }) {
   const [password, setPassword] = context.profile[2];
   const { onTouchStart, onTouchEnd } = UseSwipe(onSwipeLeft, onSwipeRight, 6);
 
-  function onSwipeLeft() {
-    navigation.navigate("Home");
-  }
-
-  function onSwipeRight() {}
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (i_user) => {
       if (initializing) setInitializing(false);

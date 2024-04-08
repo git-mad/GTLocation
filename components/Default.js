@@ -18,14 +18,16 @@ export default Default = ({ navigation }) => {
   }
 
   return (
-    <View
-      style={styles.container}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
-      <InsightListCardView></InsightListCardView>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <View
+        style={styles.container}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <InsightListCardView></InsightListCardView>
+        <StatusBar style="auto" />
+      </View>
+    </>
   );
 };
 

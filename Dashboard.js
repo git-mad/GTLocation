@@ -4,6 +4,7 @@ import Map from "./Map";
 import TestLogin from "./components/TestLogin";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContainer } from "@react-navigation/native";
+import InsightNavigator from "./components/InsightNavigator";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -23,7 +24,7 @@ export default Dashboard = () => {
         />
         <Tab.Screen
           name="Home"
-          component={Default}
+          component={InsightNavigator}
           options={{
             tabBarLabel: "Home",
             tabBarIcon: ({ color }) => (
