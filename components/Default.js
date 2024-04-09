@@ -1,20 +1,42 @@
-import { StatusBar } from "expo-status-bar"
-import { StyleSheet, Text, View } from 'react-native';
-export default Default = (props) => {
-    return (
-        <View style={styles.container}>
-        <Text>Empty Dash</Text>
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import InsightListCardView from "./InsightListCardView";
+import { Card } from "react-native-paper";
+import { GestureHandler } from "expo";
+import * as React from "react";
+import { UseSwipe } from "./UseSwipe";
+
+export default Default = ({ navigation }) => {
+  const { onTouchStart, onTouchEnd } = UseSwipe(onSwipeLeft, onSwipeRight, 6);
+
+  function onSwipeLeft() {
+    navigation.navigate("Test2");
+  }
+
+  function onSwipeRight() {
+    navigation.navigate("Test2");
+  }
+
+  return (
+    <>
+      <View
+        style={styles.container}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <InsightListCardView></InsightListCardView>
         <StatusBar style="auto" />
       </View>
-    )
-
-}
+      <Text>Test</Text>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+  container: {
+    backgroundColor: "rgb(34,38,37)",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+});

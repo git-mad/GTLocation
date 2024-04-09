@@ -9,65 +9,72 @@ import {
 import { auth } from "../firebaseConfig";
 import { TextInput, Card, Button } from "react-native-paper";
 import { GlobalContext } from "../GlobalContext";
+import { UseSwipe } from "./UseSwipe";
 
-function TestLogin({route}) {
-    // Set an initializing state whilst Firebase connects
-    const [initializing, setInitializing] = useState(true);
-    const context = useContext(GlobalContext)
-    const [user, setUser] = context.profile[0]
-    const [email, setEmail] = context.profile[1]
-    const [password, setPassword] = context.profile[2]
+function TestLogin({ navigation }) {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const context = useContext(GlobalContext);
+  const [user, setUser] = context.profile[0];
+  const [email, setEmail] = context.profile[1];
+  const [password, setPassword] = context.profile[2];
+  const { onTouchStart, onTouchEnd } = UseSwipe(onSwipeLeft, onSwipeRight, 6);
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (i_user) => {
-            if (initializing) setInitializing(false);
-            if (i_user) {
-                console.log(`Hi ${i_user.uid}`);
-                user = i_user;
-                setUser(i_user);
-            } else {
-                console.log("User is signed out");
-                setUser(null); // Set user to null when signed out
-            }
-        });
-        console.log("Test 2");
-        //console.log(route.params);
-        const currentUser = auth.currentUser;
-        if (currentUser) {
-            setUser(currentUser);
-        } else {
-            setInitializing(false);
-        }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (i_user) => {
+      if (initializing) setInitializing(false);
+      if (i_user) {
+        console.log(`Hi ${i_user.uid}`);
+        user = i_user;
+        setUser(i_user);
+      } else {
+        console.log("User is signed out");
+        setUser(null); // Set user to null when signed out
+      }
+    });
+    console.log("Test 2");
+    //console.log(route.params);
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      setUser(currentUser);
+    } else {
+      setInitializing(false);
+    }
 
-        // Cleanup function to unsubscribe from the listener
-        return () => unsubscribe();
-    }, []); // Empty dependency array ensures the effect runs only once
+    // Cleanup function to unsubscribe from the listener
+    return () => unsubscribe();
+  }, []); // Empty dependency array ensures the effect runs only once
 
-    const signUpButton = () => {
-    createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+  const signUpButton = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
         setUser(userCredential.user);
         Alert.alert(`User Created with ${email} and ${password}`);
       })
       .catch((err) => {
         console.log(err);
-        if (err.code === 'auth/invalid-email') {
-            Alert.alert("Your email is not formatted correctly (You need @gmail.com)");
+        if (err.code === "auth/invalid-email") {
+          Alert.alert(
+            "Your email is not formatted correctly (You need @gmail.com)"
+          );
         }
-        if (err.code === 'auth/weak-password') {
-            Alert.alert("Your password need to be at least 6 characters");
+        if (err.code === "auth/weak-password") {
+          Alert.alert("Your password need to be at least 6 characters");
         }
-        if (err.code === 'auth/email-already-in-use') {
-            Alert.alert("That email already exists");
+        if (err.code === "auth/email-already-in-use") {
+          Alert.alert("That email already exists");
         }
       });
   };
 
-    const signInButton = () => {
-    signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
+  const signInButton = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
         setUser(userCredential.user);
-        Alert.alert(`Signed in!`)
+        Alert.alert(`Signed in!`);
         //console.log(user);
-    }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         if (err.code == "auth/invalid-credential") {
           Alert.alert("Your username or password is incorrect");
@@ -87,13 +94,28 @@ function TestLogin({route}) {
 
   if (initializing) return null;
 
+  function onSwipeLeft() {
+    navigation.navigate("Home");
+  }
+
+  function onSwipeRight() {
+    navigation.navigate("Map");
+  }
+
+
   return (
     <>
-      <SafeAreaView style={styles.content}>
+      <SafeAreaView
+        style={styles.content}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
         <View style={styles.view}>
           <Card style={styles.cardView}>
             <Card.Title
-              title={`Welcome ${user != null ? user.email : "NULL"} to GTWrapped`}
+              title={`Welcome ${
+                user != null ? user.email : "NULL"
+              } to GTWrapped`}
               titleStyle={styles.cardTitle}
             ></Card.Title>
             {/* <Text>Email</Text> */}

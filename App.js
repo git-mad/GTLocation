@@ -7,12 +7,16 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
-import { GlobalContext } from './GlobalContext';
-
-import { isInEastArchitecture, isInInstructionalCenter } from "./BuildingFunctions";
-
+import { GlobalContext } from "./GlobalContext";
+import Default from "./components/Default";
+import Map from "./Map";
+import TestLogin from "./components/TestLogin";
+import {
+  isInEastArchitecture,
+  isInInstructionalCenter,
+} from "./BuildingFunctions";
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
-import { db } from './firebaseConfig';
+import { db } from "./firebaseConfig";
 
 // medium article
 const LOCATION_TRACKING = "location-tracking";
@@ -23,12 +27,39 @@ const LOCATION_TRACKING = "location-tracking";
  */
 
 export default function App() {
+  // test data to test insights page
+  const [insights, setInsights] = useState([
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 3 hours at Brittan Dining Hall",
+    "You spent 4 hours at the Georgia Tech Library",
+    "You spent 2 hours at Clough",
+    "You spent 5 hours at Klaus",
+  ]);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [user, setUser] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  let globalObj = {profile: [[user, setUser], [email, setEmail], [password, setPassword]]}
+  let globalObj = {
+    profile: [
+      [user, setUser],
+      [email, setEmail],
+      [password, setPassword],
+      [insights, setInsights],
+    ],
+  };
 
   TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
     if (error) {
@@ -46,42 +77,54 @@ export default function App() {
           const docRef = await addDoc(collection(db, user.email), {
             latitude: lat,
             longitude: long,
-            timeStamp: new Date(Date.now())
+            timeStamp: new Date(Date.now()),
           });
           console.log("Document written with ID: ", docRef.id);
 
           const userDocRef = doc(db, "BUILDINGS", user.email);
-          const userDocSnapshot = await getDoc(userDocRef)
+          const userDocSnapshot = await getDoc(userDocRef);
           const userBuildingData = userDocSnapshot.data();
 
           if (isInEastArchitecture(lat, long)) {
-            const previousTime = userBuildingData.timeSpentInEastArchitecture || 0;
+            const previousTime =
+              userBuildingData.timeSpentInEastArchitecture || 0;
 
             const newDoc = {
               ...userBuildingData,
               email: user.email,
-              timeSpentInEastArchitecture: previousTime + 5
-            }
+              timeSpentInEastArchitecture: previousTime + 5,
+            };
 
             const docRef2 = await setDoc(userDocRef, newDoc);
             console.log("Updated location for East Architecture: ", previousTime + 5);
-          }
-          if (isInInstructionalCenter(lat, long)) {
+          } else if (isInInstructionalCenter(lat, long)) {
             const previousTime = userBuildingData.timeSpentInInstructionalCenter || 0;
 
             const newDoc = {
               ...userBuildingData,
               email: user.email,
-              timeSpentInInstructionalCenter: previousTime + 5
-            }
+              timeSpentInInstructionalCenter: previousTime + 5,
+            };
 
             const docRef2 = await setDoc(userDocRef, newDoc);
             console.log("Updated location for Instructional Center: ", previousTime);
-          }
+          } else {
+            const previousTime = userBuildingData.timeOutside || 0;
 
+            const newDoc = {
+              ...userBuildingData,
+              email: user.email,
+              timeOutside: previousTime + 5
+            }
+
+            const docRef2 = await setDoc(userDocRef, newDoc);
+            console.log("Updated location for Outside: ", previousTime);
+          }
         } catch (e) {
           console.error("Error adding document: ", e);
         }
+      } else {
+        console.log("User not connected...");
       }
     }
   });
@@ -134,14 +177,11 @@ export default function App() {
     <GlobalContext.Provider value={globalObj}>
       <SafeAreaProvider>
         <PaperProvider>
-            <Dashboard/>
-          <StatusBar style="auto" />
+          <Dashboard/>
         </PaperProvider>
       </SafeAreaProvider>
     </GlobalContext.Provider>
   );
 }
-
-
 
 AppRegistry.registerComponent(appName, () => Main);
