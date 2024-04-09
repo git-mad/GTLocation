@@ -10,11 +10,11 @@ export default Default = ({ navigation }) => {
   const { onTouchStart, onTouchEnd } = UseSwipe(onSwipeLeft, onSwipeRight, 6);
 
   function onSwipeLeft() {
-    navigation.navigate("Map");
+    navigation.navigate("Test2");
   }
 
   function onSwipeRight() {
-    navigation.navigate("Login");
+    navigation.navigate("Test2");
   }
 
   return (
