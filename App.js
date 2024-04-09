@@ -96,14 +96,9 @@ export default function App() {
             };
 
             const docRef2 = await setDoc(userDocRef, newDoc);
-            console.log(
-              "Updated location for East Architecture: ",
-              previousTime + 5
-            );
-          }
-          if (isInInstructionalCenter(lat, long)) {
-            const previousTime =
-              userBuildingData.timeSpentInInstructionalCenter || 0;
+            console.log("Updated location for East Architecture: ", previousTime + 5);
+          } else if (isInInstructionalCenter(lat, long)) {
+            const previousTime = userBuildingData.timeSpentInInstructionalCenter || 0;
 
             const newDoc = {
               ...userBuildingData,
@@ -112,14 +107,24 @@ export default function App() {
             };
 
             const docRef2 = await setDoc(userDocRef, newDoc);
-            console.log(
-              "Updated location for Instructional Center: ",
-              previousTime
-            );
+            console.log("Updated location for Instructional Center: ", previousTime);
+          } else {
+            const previousTime = userBuildingData.timeOutside || 0;
+
+            const newDoc = {
+              ...userBuildingData,
+              email: user.email,
+              timeOutside: previousTime + 5
+            }
+
+            const docRef2 = await setDoc(userDocRef, newDoc);
+            console.log("Updated location for Outside: ", previousTime);
           }
         } catch (e) {
           console.error("Error adding document: ", e);
         }
+      } else {
+        console.log("User not connected...");
       }
     }
   });
@@ -171,7 +176,9 @@ export default function App() {
   return (
     <GlobalContext.Provider value={globalObj}>
       <SafeAreaProvider>
-        <PaperProvider></PaperProvider>
+        <PaperProvider>
+          <Dashboard/>
+        </PaperProvider>
       </SafeAreaProvider>
     </GlobalContext.Provider>
   );

@@ -1,7 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Default from "../components/Default";
 
-export default InsightNavigator = () => {
+export default function InsightNavigator() {
   const Stack = createNativeStackNavigator();
 
   return (

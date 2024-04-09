@@ -11,7 +11,7 @@ import { TextInput, Card, Button } from "react-native-paper";
 import { GlobalContext } from "../GlobalContext";
 import { UseSwipe } from "./UseSwipe";
 
-function TestLogin({ route, navigation }) {
+function TestLogin({ navigation }) {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const context = useContext(GlobalContext);
@@ -93,6 +93,15 @@ function TestLogin({ route, navigation }) {
   };
 
   if (initializing) return null;
+
+  function onSwipeLeft() {
+    navigation.navigate("Home");
+  }
+
+  function onSwipeRight() {
+    navigation.navigate("Map");
+  }
+
 
   return (
     <>

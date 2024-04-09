@@ -24,7 +24,7 @@ export default Dashboard = () => {
         />
         <Tab.Screen
           name="Home"
-          component={InsightNavigator}
+          component={Default}
           options={{
             tabBarLabel: "Home",
             tabBarIcon: ({ color }) => (
