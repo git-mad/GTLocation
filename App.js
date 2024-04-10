@@ -14,6 +14,7 @@ import TestLogin from "./components/TestLogin";
 import {
   isInEastArchitecture,
   isInInstructionalCenter,
+  buildingList
 } from "./BuildingFunctions";
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
@@ -85,30 +86,24 @@ export default function App() {
           const userDocSnapshot = await getDoc(userDocRef);
           const userBuildingData = userDocSnapshot.data();
 
-          if (isInEastArchitecture(lat, long)) {
-            const previousTime =
-              userBuildingData.timeSpentInEastArchitecture || 0;
+          let inAnyBuilding = false;
 
-            const newDoc = {
-              ...userBuildingData,
-              email: user.email,
-              timeSpentInEastArchitecture: previousTime + 5,
-            };
+          for (const building in buildingList) {
+            if (building.isInBuilding(lat, long)) {
+              const previousTime = userBuildingData[building.firestoreAttribute] || 0;
+              const newDoc = {
+                ...userBuildingData,
+                email: user.email,
+                [building.firestoreAttribute]: previousTime + 5,
+              };
+              const docRef2 = await setDoc(userDocRef, newDoc);
+              console.log(`Updated location for ${building.name}: `, previousTime + 5);
+              inAnyBuilding = true;
+              break; // Exit the loop after finding the building
+            }
+          }
 
-            const docRef2 = await setDoc(userDocRef, newDoc);
-            console.log("Updated location for East Architecture: ", previousTime + 5);
-          } else if (isInInstructionalCenter(lat, long)) {
-            const previousTime = userBuildingData.timeSpentInInstructionalCenter || 0;
-
-            const newDoc = {
-              ...userBuildingData,
-              email: user.email,
-              timeSpentInInstructionalCenter: previousTime + 5,
-            };
-
-            const docRef2 = await setDoc(userDocRef, newDoc);
-            console.log("Updated location for Instructional Center: ", previousTime);
-          } else {
+          if (!inAnyBuilding) {
             const previousTime = userBuildingData.timeOutside || 0;
 
             const newDoc = {

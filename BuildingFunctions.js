@@ -1,27 +1,63 @@
 
 class Building {
     name;
+    firestoreAttribute;
     topLeft;
     topRight;
     bottomLeft;
     bottomRight;
 
-    constructor(name, topLeft, topRight, bottomLeft, bottomRight) {
+    constructor(name, firestoreAttribute, topLeft, bottomLeft, bottomRight, topRight) {
         this.name = name;
+        this.firestoreAttribute = firestoreAttribute;
         this.topLeft = topLeft;
-        this.topRight = topRight;
         this.bottomLeft = bottomLeft;
         this.bottomRight = bottomRight;
+        this.topRight = topRight;
+    }
+
+    isInBuilding(lat, lng) {
+        if (lat > this.topLeft[0]) {
+            return false
+        }
+        if (lat < this.bottomLeft[0]) {
+            return false
+        }
+        if (lng < this.topLeft[1]) {
+            return false;
+        }
+        if (lng > this.topRight[1]) {
+            return false;
+        }
+        return true;
+    }
+
+    getPolygonCoordinates() {
+        return [
+            { latitude: this.topLeft[0], longitude: this.topLeft[1]},
+            { latitude: this.bottomLeft[0], longitude: this.bottomLeft[1]},
+            { latitude: this.bottomRight[0], longitude: this.bottomRight[1]},
+            { latitude: this.topRight[0], longitude: this.topRight[1]}
+        ]
     }
 }
 
-const buildingList = [
+export const buildingList = [
     new Building("East Architecture",
-                 [33.776217787259306, -84.39542688430666],
-                 [33.77621278221531, -84.39496474519075],
-                 [33.77607138960092, -84.39542086294956],
-                 [33.77607889717923, -84.39497678790335])
+                 "timeSpentInEastArchitecture",
+                 [33.77630556911948, -84.39575491672663],
+                 [33.77565645321612, -84.39568608972736],
+                 [33.77568505842732, -84.39492369835084],
+                 [33.77626156141704, -84.39491575677398]),
+    new Building("Instructional Center",
+                 "timeSpentInInstructionalCenter",
+                 [33.775685157019936, -84.4014699217776],
+                 [33.775244892946540, -84.4014849475484],
+                 [33.775276117423466, -84.4011055468365],
+                 [33.775672667290166, -84.4010379308681]),         
 ]
+
+// ARCHIVE
 
 export const isInEastArchitecture = (lat, lng) => {
     const topLeft = [33.77630556911948, -84.39575491672663]
