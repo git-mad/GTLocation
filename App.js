@@ -7,7 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 import React, { useState, useEffect } from "react";
-import { GlobalContext } from "./GlobalContext";
+import { GlobalContext, InsightContext } from "./GlobalContext";
 import Default from "./components/Default";
 import Map from "./Map";
 import TestLogin from "./components/TestLogin";
@@ -29,18 +29,7 @@ const LOCATION_TRACKING = "location-tracking";
 
 export default function App() {
   // test data to test insights page
-  const [insights, setInsights] = useState([
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
-    "You spent 3 hours at Brittan Dining Hall",
+  const insights = useState([
     "You spent 3 hours at Brittan Dining Hall",
     "You spent 3 hours at Brittan Dining Hall",
     "You spent 3 hours at Brittan Dining Hall",
@@ -48,19 +37,22 @@ export default function App() {
     "You spent 2 hours at Clough",
     "You spent 5 hours at Klaus",
   ]);
+  const time = useState(0)
+  const currLocation = useState("")
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [user, setUser] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   let globalObj = {
     profile: [
       [user, setUser],
       [email, setEmail],
       [password, setPassword],
-      [insights, setInsights],
     ],
   };
+  let insightObj = {insights: insights, time:time, currLocation:currLocation}
 
   TaskManager.defineTask(LOCATION_TRACKING, async ({ data, error }) => {
     if (error) {
@@ -87,9 +79,21 @@ export default function App() {
           const userBuildingData = userDocSnapshot.data();
 
           let inAnyBuilding = false;
-
-          for (const building in buildingList) {
+          console.log(buildingList + "Test")
+          for (const building of buildingList) {
+            console.log("Test" + building)
             if (building.isInBuilding(lat, long)) {
+              if (currLocation[0] == building.name) {
+                time[1]((prevTime) => {return prevTime + 5})
+              } else {
+                
+                insights[1]((prevInsights)=> {
+                  return [...prevInsights, "You entered " + building.name]
+                })
+                currLocation[1](building.name)
+                time[1](0)
+                
+              }
               const previousTime = userBuildingData[building.firestoreAttribute] || 0;
               const newDoc = {
                 ...userBuildingData,
@@ -105,6 +109,14 @@ export default function App() {
 
           if (!inAnyBuilding) {
             const previousTime = userBuildingData.timeOutside || 0;
+            if (currLocation[0] != "") {
+              insights[1]((prevInsights)=> {
+                return [...prevInsights, "You left " + currLocation[0] + ". You spent " + time[0]]
+              })
+              currLocation[1]("")
+              time[1](0)
+
+            }
 
             const newDoc = {
               ...userBuildingData,
@@ -170,11 +182,13 @@ export default function App() {
 
   return (
     <GlobalContext.Provider value={globalObj}>
-      <SafeAreaProvider>
-        <PaperProvider>
-          <Dashboard/>
-        </PaperProvider>
-      </SafeAreaProvider>
+      <InsightContext.Provider value={insightObj}>
+        <SafeAreaProvider>
+          <PaperProvider>
+            <Dashboard/>
+          </PaperProvider>
+        </SafeAreaProvider>
+      </InsightContext.Provider>
     </GlobalContext.Provider>
   );
 }
