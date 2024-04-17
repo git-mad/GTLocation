@@ -3,16 +3,18 @@ import { Card } from "react-native-paper";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React from "react";
 import { GlobalContext } from "../GlobalContext";
+import { InsightContext } from "../GlobalContext";
 
 export default InsightListCardView = () => {
   const context = useContext(GlobalContext);
-  const [insights, setInsights] = context.profile[3];
+  const insights = useContext(InsightContext)[0];
 
   //Renders Card elements
   return (
     <Card style={styles.cardMain}>
       <Card.Title title="Insights" titleStyle={styles.cardTitle}></Card.Title>
       <ScrollView styles>
+        {console.log("Just Testing stuff")}
         {insights.map((element, index) => (
           <View
             style={styles.cardViewInsights}

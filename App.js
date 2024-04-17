@@ -85,6 +85,9 @@ export default function App() {
             if (building.isInBuilding(lat, long)) {
               if (currLocation[0] == building.name) {
                 time[1]((prevTime) => {return prevTime + 5})
+                insights[1]((prevInsights)=> {
+                  return [...prevInsights, "You have been in " + building.name + ` for ${time[0] + 5} seconds`]
+                })
               } else {
                 
                 insights[1]((prevInsights)=> {
@@ -182,7 +185,7 @@ export default function App() {
 
   return (
     <GlobalContext.Provider value={globalObj}>
-      <InsightContext.Provider value={insightObj}>
+      <InsightContext.Provider value={insights}>
         <SafeAreaProvider>
           <PaperProvider>
             <Dashboard/>
