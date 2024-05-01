@@ -14,7 +14,7 @@ import TestLogin from "./components/TestLogin";
 import {
   isInEastArchitecture,
   isInInstructionalCenter,
-  buildingList
+  buildingList,
 } from "./BuildingFunctions";
 import { collection, addDoc, setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
@@ -90,14 +90,18 @@ export default function App() {
 
           for (const building in buildingList) {
             if (building.isInBuilding(lat, long)) {
-              const previousTime = userBuildingData[building.firestoreAttribute] || 0;
+              const previousTime =
+                userBuildingData[building.firestoreAttribute] || 0;
               const newDoc = {
                 ...userBuildingData,
                 email: user.email,
                 [building.firestoreAttribute]: previousTime + 5,
               };
               const docRef2 = await setDoc(userDocRef, newDoc);
-              console.log(`Updated location for ${building.name}: `, previousTime + 5);
+              console.log(
+                `Updated location for ${building.name}: `,
+                previousTime + 5
+              );
               inAnyBuilding = true;
               break; // Exit the loop after finding the building
             }
@@ -109,8 +113,8 @@ export default function App() {
             const newDoc = {
               ...userBuildingData,
               email: user.email,
-              timeOutside: previousTime + 5
-            }
+              timeOutside: previousTime + 5,
+            };
 
             const docRef2 = await setDoc(userDocRef, newDoc);
             console.log("Updated location for Outside: ", previousTime);
@@ -172,7 +176,7 @@ export default function App() {
     <GlobalContext.Provider value={globalObj}>
       <SafeAreaProvider>
         <PaperProvider>
-          <Dashboard/>
+          <Dashboard />
         </PaperProvider>
       </SafeAreaProvider>
     </GlobalContext.Provider>

@@ -1,20 +1,21 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import InsightListCardView from "./InsightListCardView";
+import SummaryListCardView from "./SummaryListCardView";
 import { Card } from "react-native-paper";
 import { GestureHandler } from "expo";
 import * as React from "react";
 import { UseSwipe } from "./UseSwipe";
+import InsightListCardView from "./InsightListCardView";
 
-export default Default = ({ navigation }) => {
+export default Summary = ({ navigation }) => {
   const { onTouchStart, onTouchEnd } = UseSwipe(onSwipeLeft, onSwipeRight, 6);
 
   function onSwipeLeft() {
-    navigation.navigate("Summary");
+    navigation.navigate("Default");
   }
 
   function onSwipeRight() {
-    navigation.navigate("Summary");
+    navigation.navigate("Default");
   }
 
   return (
@@ -24,10 +25,10 @@ export default Default = ({ navigation }) => {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        <InsightListCardView></InsightListCardView>
+        <SummaryListCardView></SummaryListCardView>
         <StatusBar style="auto" />
       </View>
-      <Text>Test</Text>
+      <Text>SummaryCardView</Text>
     </>
   );
 };

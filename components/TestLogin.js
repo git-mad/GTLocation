@@ -102,7 +102,6 @@ function TestLogin({ navigation }) {
     navigation.navigate("Map");
   }
 
-
   return (
     <>
       <SafeAreaView
