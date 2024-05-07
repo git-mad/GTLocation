@@ -36,3 +36,6 @@ yarn-error.*
 
 # local build folders
 android/
+
+# eslint config files
+eslint.config.mjs

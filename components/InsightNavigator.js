@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Default from "../components/Default";
-import Test2 from "./Test2";
+import Summary from "./Summary";
 export default function InsightNavigator() {
   const Stack = createNativeStackNavigator();
 
@@ -9,8 +9,8 @@ export default function InsightNavigator() {
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Default" component={Default} />
-        <Stack.Screen name="Test2" component={Test2} />
+        <Stack.Screen name="Summary" component={Summary} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
+}
